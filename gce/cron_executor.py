@@ -231,8 +231,15 @@ class Executor():
 
     def watch_topic(self):
         while True:
-            msgs = self.get_messages()
-            if msgs:
+            msgs = None
+            try:
+                msgs = self.get_messages()       
+            except Error:
+                log.error('Failed to get messages.')
+
+            if (msgs != None):                      
                 self.process_messages(msgs)
+            else:
+                log.error('Skipping processing message.')
             # when return immediately is False-  there is about a 90second open
             # request
